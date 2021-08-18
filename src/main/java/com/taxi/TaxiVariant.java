@@ -7,3 +7,4 @@ public class TaxiVariant {
     public double price;
     public double distance;
 }
+
