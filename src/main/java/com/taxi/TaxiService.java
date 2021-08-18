@@ -4,12 +4,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 class TaxiService {
     private final List<TaxiAggregator> taxiAggregators;
-    private List<List<TaxiVariant>> fullList = new ArrayList<>();
+    private final List<List<TaxiVariant>> fullList = new ArrayList<>();
 
 
     public TaxiService(List<TaxiAggregator> taxiAggregators){
@@ -27,6 +28,27 @@ class TaxiService {
     List<TaxiVariant> findTaxiResults(int findId){
 
         return fullList.get(findId);
+    }
+
+    String reservation(UUID reservationId, int findId){
+        List<TaxiVariant> taxiVariants;
+        String findName;
+        String answerSt;
+        Answer answerOj = new Answer();
+
+        taxiVariants = fullList.get(findId);
+        TaxiVariant taxiVariant = taxiVariants
+                .stream()
+                .filter((x) -> x.idVariant.equals(reservationId))
+                .findFirst()
+                .get();
+        findName = taxiVariant.name;
+        boolean status = taxiAggregators
+                .stream()
+                .filter((x) -> x.getName().equals(findName))
+                .map(TaxiAggregator::getTaxi).findFirst().orElse(false);
+        answerSt = answerOj.getAnswer(taxiVariant,status);
+        return answerSt;
     }
 
 }
