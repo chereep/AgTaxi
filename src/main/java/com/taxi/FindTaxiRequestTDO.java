@@ -1,7 +1,7 @@
 package com.taxi;
 
 
-public class FindTaxiRequest {
+public class FindTaxiRequestTDO {
 
     String from;
     String to;

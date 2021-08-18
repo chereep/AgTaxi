@@ -10,44 +10,44 @@ import java.util.stream.Collectors;
 @Service
 class TaxiService {
     private final List<TaxiAggregator> taxiAggregators;
-    private final List<List<TaxiVariant>> fullList = new ArrayList<>();
+    private final List<List<TaxiVariantDTO>> fullList = new ArrayList<>();
 
 
     public TaxiService(List<TaxiAggregator> taxiAggregators){
         this.taxiAggregators = taxiAggregators;
     }
     int findTaxiVariants(String from, String to) {
-        List<TaxiVariant> foundTaxiVariants = taxiAggregators
+        List<TaxiVariantDTO> foundTaxiVariantDTOS = taxiAggregators
                 .stream()
                 .map(x->x.findTaxiVariant(from, to))
                 .collect(Collectors.toList());
-        fullList.add(foundTaxiVariants);
+        fullList.add(foundTaxiVariantDTOS);
         return fullList.size()-1;
 
     }
-    List<TaxiVariant> findTaxiResults(int findId){
+    List<TaxiVariantDTO> findTaxiResults(int findId){
 
         return fullList.get(findId);
     }
 
     String reservation(UUID reservationId, int findId){
-        List<TaxiVariant> taxiVariants;
+        List<TaxiVariantDTO> taxiVariantDTOS;
         String findName;
         String answerSt;
         Answer answerOj = new Answer();
 
-        taxiVariants = fullList.get(findId);
-        TaxiVariant taxiVariant = taxiVariants
+        taxiVariantDTOS = fullList.get(findId);
+        TaxiVariantDTO taxiVariantDTO = taxiVariantDTOS
                 .stream()
                 .filter((x) -> x.idVariant.equals(reservationId))
                 .findFirst()
                 .get();
-        findName = taxiVariant.name;
+        findName = taxiVariantDTO.name;
         boolean status = taxiAggregators
                 .stream()
                 .filter((x) -> x.getName().equals(findName))
                 .map(TaxiAggregator::getTaxi).findFirst().orElse(false);
-        answerSt = answerOj.getAnswer(taxiVariant,status);
+        answerSt = answerOj.getAnswer(taxiVariantDTO,status);
         return answerSt;
     }
 

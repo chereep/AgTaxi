@@ -16,21 +16,21 @@ class Controller {
     }
 
     @PostMapping("/api/taxi/variants")
-    public int find(@RequestBody FindTaxiRequest findTaxiRequest) {
-        return taxiService.findTaxiVariants(findTaxiRequest.from, findTaxiRequest.to);
+    public int find(@RequestBody FindTaxiRequestTDO findTaxiRequestTDO) {
+        return taxiService.findTaxiVariants(findTaxiRequestTDO.from, findTaxiRequestTDO.to);
     }
 
     @PostMapping("/api/taxi/result")
-    public TaxiVariants findTaxiResult(@RequestBody FindId findId) {
-        TaxiVariants taxiVariants = new TaxiVariants();
-        taxiVariants.variantList = taxiService.findTaxiResults(findId.findId);
-        return taxiVariants;
+    public TaxiVariantsDTO findTaxiResult(@RequestBody FindIdDTO findIdDTO) {
+        TaxiVariantsDTO taxiVariantsDTO = new TaxiVariantsDTO();
+        taxiVariantsDTO.variantList = taxiService.findTaxiResults(findIdDTO.findId);
+        return taxiVariantsDTO;
     }
     @PostMapping("/api/taxi/reservation")
     public String reservationTaxi(@RequestBody UserIdUuidDTO userIdUuidDTO) {
         UUID uuid = userIdUuidDTO.uuid;
         int idRequest = userIdUuidDTO.id;
-        TaxiVariants taxiVariants = new TaxiVariants();
+        TaxiVariantsDTO taxiVariantsDTO = new TaxiVariantsDTO();
         return taxiService.reservation(uuid,idRequest);
 
     }

@@ -10,16 +10,16 @@ public class TestAggregator implements TaxiAggregator {
     String name = ("Такси Быстро и дешево");
 
     @Override
-    public TaxiVariant findTaxiVariant(String from, String to) {
+    public TaxiVariantDTO findTaxiVariant(String from, String to) {
         UUID uuidTaxi = UUID.randomUUID();
-        TaxiVariant taxiVariant = new TaxiVariant();
-        taxiVariant.idVariant = uuidTaxi;
-        taxiVariant.name = name;
-        taxiVariant.from = "MSK";
-        taxiVariant.to = "NSK";
-        taxiVariant.price = 1000.00;
-        taxiVariant.distance = 4020.5;
-        return taxiVariant;
+        TaxiVariantDTO taxiVariantDTO = new TaxiVariantDTO();
+        taxiVariantDTO.idVariant = uuidTaxi;
+        taxiVariantDTO.name = name;
+        taxiVariantDTO.from = "MSK";
+        taxiVariantDTO.to = "NSK";
+        taxiVariantDTO.price = 1000.00;
+        taxiVariantDTO.distance = 4020.5;
+        return taxiVariantDTO;
     }
 //    @Override
 //    public boolean findTaxiAggregator(String uuid){

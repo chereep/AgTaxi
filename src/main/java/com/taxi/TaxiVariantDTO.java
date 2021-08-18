@@ -2,7 +2,7 @@ package com.taxi;
 
 import java.util.UUID;
 
-public class TaxiVariant {
+public class TaxiVariantDTO {
 
     public String name;
     public UUID idVariant;
