@@ -10,45 +10,54 @@ import java.util.stream.Collectors;
 @Service
 class TaxiService {
     private final List<TaxiAggregator> taxiAggregators;
-    private final List<List<TaxiVariantDTO>> fullList = new ArrayList<>();
+    private final List<List<TaxiVariantDTO>> requestsTaxi = new ArrayList<>();
+    private List<TaxiReservesDTO> taxiReserves = new ArrayList<>();
 
 
     public TaxiService(List<TaxiAggregator> taxiAggregators){
         this.taxiAggregators = taxiAggregators;
     }
     int findTaxiVariants(String from, String to) {
-        List<TaxiVariantDTO> foundTaxiVariantDTOS = taxiAggregators
+        List<TaxiVariantDTO> foundTaxiVariantsDTO = taxiAggregators
                 .stream()
                 .map(x->x.findTaxiVariant(from, to))
                 .collect(Collectors.toList());
-        fullList.add(foundTaxiVariantDTOS);
-        return fullList.size()-1;
+        requestsTaxi.add(foundTaxiVariantsDTO);
+        return requestsTaxi.size()-1;
 
     }
     List<TaxiVariantDTO> findTaxiResults(int findId){
 
-        return fullList.get(findId);
+        return requestsTaxi.get(findId);
     }
 
     String reservation(UUID reservationId, int findId){
-        List<TaxiVariantDTO> taxiVariantDTOS;
+        List<TaxiVariantDTO> taxiVariants;
         String findName;
-        String answerSt;
         Answer answerOj = new Answer();
+        TaxiReservesDTO taxiReservesDTO = new TaxiReservesDTO();
 
-        taxiVariantDTOS = fullList.get(findId);
-        TaxiVariantDTO taxiVariantDTO = taxiVariantDTOS
+        taxiVariants = requestsTaxi.get(findId);
+        TaxiVariantDTO taxiVariantDTO = taxiVariants
                 .stream()
                 .filter((x) -> x.idVariant.equals(reservationId))
                 .findFirst()
-                .get();
+                .get(); // TODO если не нашли запрос, сделать отправку ответа об отсутствии запроса или сделать через цикл
         findName = taxiVariantDTO.name;
         boolean status = taxiAggregators
                 .stream()
                 .filter((x) -> x.getName().equals(findName))
                 .map(TaxiAggregator::getTaxi).findFirst().orElse(false);
-        answerSt = answerOj.getAnswer(taxiVariantDTO,status);
-        return answerSt;
+        taxiReservesDTO.reservesId = reservationId;
+        this.taxiReserves.add(taxiReservesDTO);
+        return answerOj.getAnswerResTaxi(taxiVariantDTO, status);
     }
+    String unReservation(UUID reservationId){
+        Answer answer = new Answer();
+        boolean status = taxiReserves
+                .removeIf((x)->x.reservesId.equals(reservationId));
+        return answer.getAnswerUnResTaxi(status);
+
+   }
 
 }

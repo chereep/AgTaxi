@@ -34,6 +34,12 @@ class Controller {
         return taxiService.reservation(uuid,idRequest);
 
     }
+    @PostMapping("/api/taxi/unReservation")
+    public String unReservationTaxi(@RequestBody UserIdUuidDTO userIdUuidDTO){
+        UUID uuid = userIdUuidDTO.uuid;
+
+        return taxiService.unReservation(uuid);
+   }
 }
 
 
