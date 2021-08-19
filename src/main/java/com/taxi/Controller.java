@@ -41,6 +41,3 @@ class Controller {
         return taxiService.unReservation(uuid);
    }
 }
-
-
-
