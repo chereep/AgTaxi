@@ -14,14 +14,18 @@ public class TestAggregator2 implements TaxiAggregator {
     @Override
     public TaxiVariantDTO findTaxiVariant(String from, String to) {
         TestAggregatorRandomUuidGenerator testAggregatorRandomUuidGenerator = null;
-        TaxiVariantDTO taxiVariantDTO = new TaxiVariantDTO();
-        taxiVariantDTO.idVariant = testAggregatorRandomUuidGenerator2.getRandomId();
-        taxiVariantDTO.name = name;
-        taxiVariantDTO.from = "MSK";
-        taxiVariantDTO.to = "NSK";
-        taxiVariantDTO.price = 1030.00;
-        taxiVariantDTO.distance = 4050.0;
-        return taxiVariantDTO;
+        TaxiVariantDTO taxiVariant = new TaxiVariantDTO();
+        taxiVariant.idVariant = testAggregatorRandomUuidGenerator2.getRandomId();
+        taxiVariant.name = name;
+        taxiVariant.from = "MSK";
+        taxiVariant.to = "NSK";
+        taxiVariant.price = 1030.00;
+        taxiVariant.distance = 4050.0;
+        if (from.equals(taxiVariant.from) & to.equals(taxiVariant.to)){
+            return taxiVariant;
+        }else {
+            return null;
+        }
     }
 
     @Override

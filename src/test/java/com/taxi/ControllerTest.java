@@ -37,8 +37,8 @@ class ControllerTest {
         when(testAggregatorRandomUuidGenerator2.getRandomId()).thenReturn(UUID.fromString("bb48520e-1d02-4cb7-a37b-ba322993631c"));
         mockMvc.perform(post("/api/taxi/variants").contentType(MediaType.APPLICATION_JSON).content("" +
                         "{\n" +
-                        "     \"from\": \"from\"," +
-                        "     \"to\": \"to\"" +
+                        "     \"from\": \"MSK\"," +
+                        "     \"to\": \"NSK\"" +
                         "}")).andExpect(status().isOk())
                 .andExpect(content().string("0"));
         mockMvc.perform(post("/api/taxi/result").contentType(MediaType.APPLICATION_JSON).content("" +
@@ -51,14 +51,31 @@ class ControllerTest {
                         "}")).andExpect(status().isOk())
                 .andExpect(content().string("Такси из города MSK в город NSK успешно заказано за 1000.0 руб. Спасибо!"));
         mockMvc.perform(post("/api/taxi/unReservation").contentType(MediaType.APPLICATION_JSON).content("{\n" +
-                "     \"uuid\": \"841deced-d500-46de-86ec-bcc44eebfd4e\"\n" +
-                "}")).andExpect(status().isOk())
+                        "     \"uuid\": \"841deced-d500-46de-86ec-bcc44eebfd4e\"\n" +
+                        "}")).andExpect(status().isOk())
                 .andExpect(content().string("Резерв успешно отменен!"));
 
 
     }
-//     void testCod404(){
-//        mockMvc.perform(post(""))
-//     }
+
+    @Test
+    void testCod404() throws Exception {
+        mockMvc.perform(post("/api/taxi/variants").contentType(MediaType.APPLICATION_JSON).content("" +
+                        "{\n" +
+                        "     \"from\": \"fromError\"," +
+                        "     \"to\": \"toError\"" +
+                        "}")).andExpect(status().isOk())
+                .andExpect(content().string("0"));
+        mockMvc.perform(post("/api/taxi/result").contentType(MediaType.APPLICATION_JSON).content("" +
+                        "{\n" +
+                        "     \"findId\": 0\n" +
+                        "}")).andExpect(status().isNotFound());
+        mockMvc.perform(post("/api/taxi/reservation").contentType(MediaType.APPLICATION_JSON).content("{\n" +
+                        "     \"uuid\": \"841deced-d500-46de-86ec-bcc44eebfd5e\"\n" +
+                        "}")).andExpect(status().isNotFound());
+        mockMvc.perform(post("/api/taxi/unReservation").contentType(MediaType.APPLICATION_JSON).content("{\n" +
+                        "     \"uuid\": \"841deced-d500-46de-86ec-bcc44eebfd5e\"\n" +
+                        "}")).andExpect(status().isNotFound());
+    }
 
 }

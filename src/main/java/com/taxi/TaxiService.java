@@ -6,6 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,20 +21,29 @@ class TaxiService {
         this.taxiAggregators = taxiAggregators;
     }
     int findTaxiVariants(String from, String to) {
-        List<TaxiVariantDTO> foundTaxiVariantsDTO = taxiAggregators
+        List<TaxiVariantDTO> foundTaxiVariantsDTO;
+        foundTaxiVariantsDTO = taxiAggregators
                 .stream()
-                .map(x->x.findTaxiVariant(from, to))
+                .map(x -> x.findTaxiVariant(from, to)).filter(Objects::nonNull)
                 .collect(Collectors.toList());
         requestsTaxi.add(foundTaxiVariantsDTO);
-        return requestsTaxi.size()-1;
+        return requestsTaxi.size() - 1;
 
     }
-    List<TaxiVariantDTO> findTaxiResults(int findId){
 
-        return requestsTaxi.get(findId);
+    List<TaxiVariantDTO> findTaxiResults(int findId) {
+        List<TaxiVariantDTO> taxiVariants;
+        taxiVariants = requestsTaxi.get(findId);
+
+        if (!taxiVariants.isEmpty()) {
+            return taxiVariants;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    String reservation(UUID reservationId, int findId){
+    String reservation(UUID reservationId, int findId) {
         List<TaxiVariantDTO> taxiVariants;
         String findName;
         Answer answerOj = new Answer();

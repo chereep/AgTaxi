@@ -3,7 +3,7 @@ package com.taxi;
 
 public class FindTaxiRequestTDO {
 
-    String from;
-    String to;
+    public String from;
+    public String to;
 }
 
