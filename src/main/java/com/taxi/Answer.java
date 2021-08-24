@@ -9,10 +9,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class Answer {
 
     public String getAnswerResTaxi(TaxiVariantDTO taxiVariantDTO, boolean status) {
-        String answer;
         if (status) {
-            answer = "Такси из города " + taxiVariantDTO.from + " в город " + taxiVariantDTO.to + " успешно заказано за " + taxiVariantDTO.price + " руб. Спасибо!";
-            return answer;
+            return "Такси из города " + taxiVariantDTO.from +
+                    " в город " + taxiVariantDTO.to +
+                    " успешно заказано за " + taxiVariantDTO.price +
+                    " руб. Спасибо!";
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

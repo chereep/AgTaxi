@@ -13,11 +13,14 @@ import java.util.stream.Collectors;
 @Service
 class TaxiService {
     private final List<TaxiAggregator> taxiAggregators;
+    private final Answer answer;
+
     private final List<List<TaxiVariantDTO>> requestsTaxi = new ArrayList<>();
     private final List<TaxiReservesDTO> taxiReserves = new ArrayList<>();
 
-    public TaxiService(List<TaxiAggregator> taxiAggregators) {
+    public TaxiService(List<TaxiAggregator> taxiAggregators, Answer answer) {
         this.taxiAggregators = taxiAggregators;
+        this.answer = answer;
     }
 
     public int findTaxiVariants(String from, String to) {
@@ -42,31 +45,25 @@ class TaxiService {
     }
 
     public String reservation(UUID reservationId, int findId) {
-        List<TaxiVariantDTO> taxiVariants;
-        String findName;
-        Answer answerOj = new Answer();
         TaxiReservesDTO taxiReservesDTO = new TaxiReservesDTO();
 
-        taxiVariants = requestsTaxi.get(findId);
-        TaxiVariantDTO taxiVariantDTO = taxiVariants
+        TaxiVariantDTO taxiVariantDTO = requestsTaxi.get(findId)
                 .stream()
                 .filter((x) -> x.idVariant.equals(reservationId))
                 .findFirst()
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Резерв не найден!"));
-        findName = taxiVariantDTO.name;
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Резерв не найден!"));
         boolean status = taxiAggregators
                 .stream()
-                .filter((x) -> x.getName().equals(findName))
+                .filter((x) -> x.getName().equals(taxiVariantDTO.name))
                 .map(TaxiAggregator::getTaxi).findFirst().orElse(false);
         taxiReservesDTO.reservesId = reservationId;
         this.taxiReserves.add(taxiReservesDTO);
-        return answerOj.getAnswerResTaxi(taxiVariantDTO, status);
+        return answer.getAnswerResTaxi(taxiVariantDTO, status);
     }
 
-    public String unReservation(UUID reservationId){
-        Answer answer = new Answer();
+    public String unReservation(UUID reservationId) {
         boolean status = taxiReserves
-                .removeIf((x)->x.reservesId.equals(reservationId));
+                .removeIf((x) -> x.reservesId.equals(reservationId));
         return answer.getAnswerUnResTaxi(status);
-   }
+    }
 }
