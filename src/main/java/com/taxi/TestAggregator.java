@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TestAggregator implements TaxiAggregator {
-    String name = ("Такси Быстро и дешево");
+    private final static String NAME = "Такси Быстро и дешево";
+
     private final TestAggregatorRandomUuidGenerator testAggregatorRandomUuidGenerator;
 
     TestAggregator(TestAggregatorRandomUuidGenerator testAggregatorRandomUuidGenerator) {
@@ -13,10 +14,9 @@ public class TestAggregator implements TaxiAggregator {
 
     @Override
     public TaxiVariantDTO findTaxiVariant(String from, String to) {
-
         TaxiVariantDTO taxiVariant = new TaxiVariantDTO();
         taxiVariant.idVariant = testAggregatorRandomUuidGenerator.getRandomId();
-        taxiVariant.name = name;
+        taxiVariant.name = NAME;
         taxiVariant.from = "MSK";
         taxiVariant.to = "NSK";
         taxiVariant.price = 1000.00;
@@ -35,6 +35,6 @@ public class TestAggregator implements TaxiAggregator {
     
     @Override
     public String getName(){
-        return name;
+        return NAME;
     }
 }

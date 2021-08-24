@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 class TaxiService {
     private final List<TaxiAggregator> taxiAggregators;
     private final List<List<TaxiVariantDTO>> requestsTaxi = new ArrayList<>();
-    private List<TaxiReservesDTO> taxiReserves = new ArrayList<>();
+    private final List<TaxiReservesDTO> taxiReserves = new ArrayList<>();
 
-
-    public TaxiService(List<TaxiAggregator> taxiAggregators){
+    public TaxiService(List<TaxiAggregator> taxiAggregators) {
         this.taxiAggregators = taxiAggregators;
     }
-    int findTaxiVariants(String from, String to) {
+
+    public int findTaxiVariants(String from, String to) {
         List<TaxiVariantDTO> foundTaxiVariantsDTO;
         foundTaxiVariantsDTO = taxiAggregators
                 .stream()
@@ -28,10 +28,9 @@ class TaxiService {
                 .collect(Collectors.toList());
         requestsTaxi.add(foundTaxiVariantsDTO);
         return requestsTaxi.size() - 1;
-
     }
 
-    List<TaxiVariantDTO> findTaxiResults(int findId) {
+    public List<TaxiVariantDTO> findTaxiResults(int findId) {
         List<TaxiVariantDTO> taxiVariants;
         taxiVariants = requestsTaxi.get(findId);
 
@@ -40,10 +39,9 @@ class TaxiService {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
     }
 
-    String reservation(UUID reservationId, int findId) {
+    public String reservation(UUID reservationId, int findId) {
         List<TaxiVariantDTO> taxiVariants;
         String findName;
         Answer answerOj = new Answer();
@@ -64,12 +62,11 @@ class TaxiService {
         this.taxiReserves.add(taxiReservesDTO);
         return answerOj.getAnswerResTaxi(taxiVariantDTO, status);
     }
-    String unReservation(UUID reservationId){
+
+    public String unReservation(UUID reservationId){
         Answer answer = new Answer();
         boolean status = taxiReserves
                 .removeIf((x)->x.reservesId.equals(reservationId));
         return answer.getAnswerUnResTaxi(status);
-
    }
-
 }

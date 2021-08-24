@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class Answer {
 
-
     public String getAnswerResTaxi(TaxiVariantDTO taxiVariantDTO, boolean status) {
         String answer;
         if (status) {
@@ -17,7 +16,6 @@ public class Answer {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
     }
 
     public String getAnswerUnResTaxi(boolean status) {
@@ -28,7 +26,5 @@ public class Answer {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
-
     }
 }
