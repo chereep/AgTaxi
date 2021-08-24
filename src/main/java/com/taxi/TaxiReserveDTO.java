@@ -3,6 +3,6 @@ package com.taxi;
 
 import java.util.UUID;
 
-public class TaxiReservesDTO {
+public class TaxiReserveDTO {
     public UUID reservesId;
 }

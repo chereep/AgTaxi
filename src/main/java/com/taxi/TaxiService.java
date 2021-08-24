@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,28 +13,27 @@ import java.util.stream.Collectors;
 class TaxiService {
     private final List<TaxiAggregator> taxiAggregators;
     private final Answer answer;
+    private final TaxiRequestRepository taxiRequestRepository;
+    private final TaxiReservationRepository taxiReservationRepository;
 
-    private final List<List<TaxiVariantDTO>> requestsTaxi = new ArrayList<>();
-    private final List<TaxiReservesDTO> taxiReserves = new ArrayList<>();
-
-    public TaxiService(List<TaxiAggregator> taxiAggregators, Answer answer) {
+    public TaxiService(List<TaxiAggregator> taxiAggregators, Answer answer, TaxiRequestRepository taxiRequestRepository, TaxiReservationRepository taxiReservationRepository) {
         this.taxiAggregators = taxiAggregators;
         this.answer = answer;
+        this.taxiRequestRepository = taxiRequestRepository;
+        this.taxiReservationRepository = taxiReservationRepository;
     }
 
     public int findTaxiVariants(String from, String to) {
-        List<TaxiVariantDTO> foundTaxiVariantsDTO;
-        foundTaxiVariantsDTO = taxiAggregators
+        List<TaxiVariantDTO> foundTaxiVariants = taxiAggregators
                 .stream()
-                .map(x -> x.findTaxiVariant(from, to)).filter(Objects::nonNull)
+                .map(x -> x.findTaxiVariant(from, to))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        requestsTaxi.add(foundTaxiVariantsDTO);
-        return requestsTaxi.size() - 1;
+        return taxiRequestRepository.save(foundTaxiVariants);
     }
 
     public List<TaxiVariantDTO> findTaxiResults(int findId) {
-        List<TaxiVariantDTO> taxiVariants;
-        taxiVariants = requestsTaxi.get(findId);
+        List<TaxiVariantDTO> taxiVariants = taxiRequestRepository.findById(findId);
 
         if (!taxiVariants.isEmpty()) {
             return taxiVariants;
@@ -45,9 +43,8 @@ class TaxiService {
     }
 
     public String reservation(UUID reservationId, int findId) {
-        TaxiReservesDTO taxiReservesDTO = new TaxiReservesDTO();
 
-        TaxiVariantDTO taxiVariantDTO = requestsTaxi.get(findId)
+        TaxiVariantDTO taxiVariantDTO = taxiRequestRepository.findById(findId)
                 .stream()
                 .filter((x) -> x.idVariant.equals(reservationId))
                 .findFirst()
@@ -56,14 +53,13 @@ class TaxiService {
                 .stream()
                 .filter((x) -> x.getName().equals(taxiVariantDTO.name))
                 .map(TaxiAggregator::getTaxi).findFirst().orElse(false);
-        taxiReservesDTO.reservesId = reservationId;
-        this.taxiReserves.add(taxiReservesDTO);
+        TaxiReserveDTO taxiReserveDTO = new TaxiReserveDTO();
+        taxiReserveDTO.reservesId = reservationId;
+        taxiReservationRepository.save(taxiReserveDTO);
         return answer.getAnswerResTaxi(taxiVariantDTO, status);
     }
 
     public String unReservation(UUID reservationId) {
-        boolean status = taxiReserves
-                .removeIf((x) -> x.reservesId.equals(reservationId));
-        return answer.getAnswerUnResTaxi(status);
+        return answer.getAnswerUnResTaxi(taxiReservationRepository.removeByReservationId(reservationId));
     }
 }
