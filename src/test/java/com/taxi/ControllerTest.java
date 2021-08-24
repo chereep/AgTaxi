@@ -65,10 +65,10 @@ class ControllerTest {
                         "     \"from\": \"fromError\"," +
                         "     \"to\": \"toError\"" +
                         "}")).andExpect(status().isOk())
-                .andExpect(content().string("1"));
+                .andExpect(content().string("1"));//Если запускать отдельно то должен вернуть 0 а не 1.
         mockMvc.perform(post("/api/taxi/result").contentType(MediaType.APPLICATION_JSON).content("" +
                         "{\n" +
-                        "     \"findId\": 1\n" +
+                        "     \"findId\": 1\n" + //Если запускать отдельно то ищем 0(ID) а не 1.
                         "}")).andExpect(status().isNotFound());
         mockMvc.perform(post("/api/taxi/reservation").contentType(MediaType.APPLICATION_JSON).content("{\n" +
                         "     \"uuid\": \"841deced-d500-46de-86ec-bcc44eebfd5e\"\n" +
