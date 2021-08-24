@@ -1,6 +1,8 @@
 package com.taxi;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ class TaxiService {
                 .stream()
                 .filter((x) -> x.idVariant.equals(reservationId))
                 .findFirst()
-                .get(); // TODO если не нашли запрос, сделать отправку ответа об отсутствии запроса или сделать через цикл
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Резерв не найден!"));
         findName = taxiVariantDTO.name;
         boolean status = taxiAggregators
                 .stream()

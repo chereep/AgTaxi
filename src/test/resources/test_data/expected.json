@@ -1,0 +1,20 @@
+{
+  "variantList": [
+    {
+      "name": "Такси Быстро и дешево",
+      "idVariant": "841deced-d500-46de-86ec-bcc44eebfd4e",
+      "from": "MSK",
+      "to": "NSK",
+      "price": 1000.0,
+      "distance": 4020.5
+    },
+    {
+      "name": "Такси как в Лондоне",
+      "idVariant": "bb48520e-1d02-4cb7-a37b-ba322993631c",
+      "from": "MSK",
+      "to": "NSK",
+      "price": 1030.0,
+      "distance": 4050.0
+    }
+  ]
+}

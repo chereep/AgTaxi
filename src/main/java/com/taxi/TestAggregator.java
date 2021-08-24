@@ -2,18 +2,19 @@ package com.taxi;
 
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
-
 public class TestAggregator implements TaxiAggregator {
     String name = ("Такси Быстро и дешево");
+    private final TestAggregatorRandomUuidGenerator testAggregatorRandomUuidGenerator;
+
+    TestAggregator(TestAggregatorRandomUuidGenerator testAggregatorRandomUuidGenerator) {
+        this.testAggregatorRandomUuidGenerator = testAggregatorRandomUuidGenerator;
+    }
 
     @Override
     public TaxiVariantDTO findTaxiVariant(String from, String to) {
-        RandomUuid randomUuid = null;
         TaxiVariantDTO taxiVariantDTO = new TaxiVariantDTO();
-        taxiVariantDTO.idVariant = randomUuid.getRandomId();
+        taxiVariantDTO.idVariant = testAggregatorRandomUuidGenerator.getRandomId();
         taxiVariantDTO.name = name;
         taxiVariantDTO.from = "MSK";
         taxiVariantDTO.to = "NSK";
