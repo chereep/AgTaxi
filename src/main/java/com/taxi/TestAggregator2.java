@@ -10,9 +10,9 @@ public class TestAggregator2 implements TaxiAggregator {
 
     @Override
     public TaxiVariantDTO findTaxiVariant(String from, String to) {
-        UUID uuidTaxi = UUID.randomUUID();
+        RandomUuid randomUuid = null;
         TaxiVariantDTO taxiVariantDTO = new TaxiVariantDTO();
-        taxiVariantDTO.idVariant = uuidTaxi;
+        taxiVariantDTO.idVariant = randomUuid.getRandomId();
         taxiVariantDTO.name = name;
         taxiVariantDTO.from = "MSK";
         taxiVariantDTO.to = "NSK";

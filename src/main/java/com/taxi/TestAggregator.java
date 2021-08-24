@@ -11,9 +11,9 @@ public class TestAggregator implements TaxiAggregator {
 
     @Override
     public TaxiVariantDTO findTaxiVariant(String from, String to) {
-        UUID uuidTaxi = UUID.randomUUID();
+        RandomUuid randomUuid = null;
         TaxiVariantDTO taxiVariantDTO = new TaxiVariantDTO();
-        taxiVariantDTO.idVariant = uuidTaxi;
+        taxiVariantDTO.idVariant = randomUuid.getRandomId();
         taxiVariantDTO.name = name;
         taxiVariantDTO.from = "MSK";
         taxiVariantDTO.to = "NSK";
@@ -21,18 +21,12 @@ public class TestAggregator implements TaxiAggregator {
         taxiVariantDTO.distance = 4020.5;
         return taxiVariantDTO;
     }
-//    @Override
-//    public boolean findTaxiAggregator(String uuid){
-//        if (uuidTaxi.toString().equals(uuid)) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
+    
     @Override
     public boolean getTaxi(){
         return true;
     }
+    
     @Override
     public String getName(){
         return name;

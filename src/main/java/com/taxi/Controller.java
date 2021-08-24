@@ -28,16 +28,11 @@ class Controller {
     }
     @PostMapping("/api/taxi/reservation")
     public String reservationTaxi(@RequestBody UserIdUuidDTO userIdUuidDTO) {
-        UUID uuid = userIdUuidDTO.uuid;
-        int idRequest = userIdUuidDTO.id;
-        TaxiVariantsDTO taxiVariantsDTO = new TaxiVariantsDTO();
-        return taxiService.reservation(uuid,idRequest);
+        return taxiService.reservation(userIdUuidDTO.uuid,userIdUuidDTO.id);
 
     }
     @PostMapping("/api/taxi/unReservation")
     public String unReservationTaxi(@RequestBody UserIdUuidDTO userIdUuidDTO){
-        UUID uuid = userIdUuidDTO.uuid;
-
-        return taxiService.unReservation(uuid);
+        return taxiService.unReservation(userIdUuidDTO.uuid);
    }
 }
